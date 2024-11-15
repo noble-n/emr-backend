@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -89,7 +90,7 @@ namespace emr_backend_business.Logic
 
                 if (!loginUser.Contains("Success"))
                 {
-                    return new ExecutedResult<LoginResponse>() { responseMessage = "An error occurred", responseCode = ResponseCode.AuthorizationError.ToString("D").PadLeft(2, '0'), data = null };
+                    return new ExecutedResult<LoginResponse>() { responseMessage = loginUser, responseCode = ResponseCode.AuthorizationError.ToString("D").PadLeft(2, '0'), data = null };
                 }
                 var accessUserVm = new AccessUserVM();
                 accessUserVm.PhoneNumber = user.PhoneNumber;
@@ -100,6 +101,8 @@ namespace emr_backend_business.Logic
 
                 // Generate JWT token
                 var authResponse = await _jwtManager.GenerateJsonWebToken(accessUserVm);
+
+                await _accountRepository.UpdateLoginActivity(user.UserId, authResponse.JwtToken, DateTime.Now);
 
                 var loginResponse = new LoginResponse
                 {
@@ -191,6 +194,7 @@ namespace emr_backend_business.Logic
                     PasswordHash = payload.PasswordHash,
                     PhoneNumber = payload.PhoneNumber,
                     RoleId = payload.RoleId,
+                    HealthCareProviderId = 0,
                 };
                 var repoResponse = await _accountRepository.CreateUser(repoPayload);
                 if (repoResponse < 0)

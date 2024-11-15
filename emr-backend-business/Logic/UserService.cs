@@ -34,12 +34,12 @@ namespace emr_backend_business.Logic
         {
             try
             {
-                //var accessUser = await _authService.CheckUserAccess(AccessToken, RemoteIpAddress);
-                //if (accessUser.data == null)
-                //{
-                //    return new ExecutedResult<string>() { responseMessage = $"Unathorized User", responseCode = ((int)ResponseCode.NotAuthenticated).ToString(), data = null };
+                var accessUser = await _authService.CheckUserAccess(AccessToken, RemoteIpAddress);
+                if (accessUser.data == null)
+                {
+                    return new ExecutedResult<string>() { responseMessage = $"Unathorized User", responseCode = ((int)ResponseCode.NotAuthenticated).ToString(), data = null };
 
-                //}
+                }
                 bool isModelStateValidate = true;
                 string validationMessage = "";
 
@@ -80,6 +80,7 @@ namespace emr_backend_business.Logic
                     PasswordHash = password,
                     PhoneNumber = payload.PhoneNumber,
                     RoleId = payload.RoleId,
+                    HealthCareProviderId = accessUser.data.HealthCareProviderId,
                 };
                 var repoResponse = await _accountRepository.CreateUser(repoPayload);
                 if (repoResponse < 0)
@@ -102,8 +103,8 @@ namespace emr_backend_business.Logic
                 // Create employee record after successful user creation
                 var employeePayload = new CreateEmployeeVM
                 {
-                    HealthCareProviderId = payload.HealthCareProviderId, // Assume this is part of the payload
-                    UserId = createdUserId, // Assign the created user ID
+                    HealthCareProviderId = accessUser.data.HealthCareProviderId,
+                    UserId = createdUserId,
                     DepartmentId = payload.DepartmentId,
                     FirstName = payload.FirstName,
                     LastName = payload.LastName,
@@ -114,6 +115,8 @@ namespace emr_backend_business.Logic
                     RoleId = payload.RoleId,
                     DateCreated = DateTime.Now,
                     Email = payload.Email,
+                    CreatedByUserId = accessUser.data.UserId,
+
                     
                 };
 
@@ -143,12 +146,12 @@ namespace emr_backend_business.Logic
             
             try
             {
-                //var accessUser = await _authService.CheckUserAccess(AccessKey, RemoteIpAddress);
-                //if (accessUser.data == null)
-                //{
-                //    return new ExecutedResult<IEnumerable<UserDTO>>() { responseMessage = $"Unathorized User", responseCode = ((int)ResponseCode.NotAuthenticated).ToString(), data = null };
+                var accessUser = await _authService.CheckUserAccess(AccessKey, RemoteIpAddress);
+                if (accessUser.data == null)
+                {
+                    return new ExecutedResult<IEnumerable<UserDTO>>() { responseMessage = $"Unathorized User", responseCode = ((int)ResponseCode.NotAuthenticated).ToString(), data = null };
 
-                //}
+                }
                 var returnData = await _accountRepository.GetAllUsers();
                 if (returnData == null)
                 {
@@ -170,12 +173,12 @@ namespace emr_backend_business.Logic
         {
             try
             {
-                //var accessUser = await _authService.CheckUserAccess(AccessKey, RemoteIpAddress);
-                //if (accessUser.data == null)
-                //{
-                //    return new ExecutedResult<UserDTO>() { responseMessage = $"Unathorized User", responseCode = ((int)ResponseCode.NotAuthenticated).ToString(), data = null };
+                var accessUser = await _authService.CheckUserAccess(AccessKey, RemoteIpAddress);
+                if (accessUser.data == null)
+                {
+                    return new ExecutedResult<UserDTO>() { responseMessage = $"Unathorized User", responseCode = ((int)ResponseCode.NotAuthenticated).ToString(), data = null };
 
-                //}
+                }
                 var returnData = await _accountRepository.GetUserByEmail(email);
                 if (returnData == null)
                 {
@@ -194,12 +197,12 @@ namespace emr_backend_business.Logic
         {
             try
             {
-                //var accessUser = await _authService.CheckUserAccess(AccessKey, RemoteIpAddress);
-                //if (accessUser.data == null)
-                //{
-                //    return new ExecutedResult<UserDTO>() { responseMessage = $"Unathorized User", responseCode = ((int)ResponseCode.NotAuthenticated).ToString(), data = null };
+                var accessUser = await _authService.CheckUserAccess(AccessKey, RemoteIpAddress);
+                if (accessUser.data == null)
+                {
+                    return new ExecutedResult<UserDTO>() { responseMessage = $"Unathorized User", responseCode = ((int)ResponseCode.NotAuthenticated).ToString(), data = null };
 
-                //}
+                }
                 var returnData = await _accountRepository.GetUserByID(UserId);
                 if (returnData == null)
                 {

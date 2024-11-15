@@ -95,6 +95,7 @@ builder.Services.Configure<JwtConfig>(options => builder.Configuration.GetSectio
 builder.Services.AddScoped<IDapperGenericRepository, DapperGenericRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IHealthCareProviderRepository, HealthCareProviderRepository>();
 builder.Services.AddScoped<IJwtManager, JwtManager>();
 builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
 
@@ -102,6 +103,8 @@ builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IHealthCareProviderService, HealthCareProviderService>();
 
 var app = builder.Build();
 

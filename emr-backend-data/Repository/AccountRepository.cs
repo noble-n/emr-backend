@@ -38,11 +38,13 @@ namespace emr_backend_data.Repository
                 param.Add("@FirstName", request.FirstName);
                 param.Add("@MiddleName", request.MiddleName);
                 param.Add("@LastName", request.LastName);
-                param.Add("@OfficialMail", request.Email);
+                param.Add("@Email", request.Email);
                 param.Add("@PhoneNumber", request.PhoneNumber);
                 param.Add("@PasswordHash", pwd);
                 param.Add("@DateCreated", request.DateCreated);
                 param.Add("@RoleId", request.RoleId);
+                param.Add("@HealthCareProviderId", request.HealthCareProviderId);
+
 
                 param.Add("@UserID", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
@@ -197,8 +199,6 @@ namespace emr_backend_data.Repository
             {
                 var param = new DynamicParameters();
                 param.Add("@Token", Token);
-                param.Add("@LoggedInWithIPAddress", LoggedInWithIPAddress);
-                param.Add("@DateCreated", DateCreated);
 
                 return await _dapper.Get<string>("sp_verify_user", param, commandType: CommandType.StoredProcedure);
 
@@ -209,7 +209,25 @@ namespace emr_backend_data.Repository
                 return "Unable to submit this detail, kindly contact support";
             }
         }
+        public async Task<string> UpdateLoginActivity(long UserId, string Token, DateTime DateCreated)
+        {
+            try
+            {
+                var param = new DynamicParameters();
 
+                param.Add("@UserId", UserId);
+                param.Add("@Token", Token);
+                param.Add("@DateCreated", DateCreated);
+                return await _dapper.Get<string>("sp_update_login_activity", param, commandType: CommandType.StoredProcedure);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"AccountRepository -> UpdateLoginActivity => {ex}");
+                return "Unable to submit this detail, kindly contact support";
+            }
+
+        }
         public async Task<UserDTO> FindUser(long? UserId, string Email, string AccessToken)
         {
             try

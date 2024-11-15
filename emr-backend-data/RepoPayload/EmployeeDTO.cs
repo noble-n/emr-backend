@@ -20,7 +20,12 @@ namespace emr_backend_data.RepoPayload
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public long RoleId { get; set; }
+        public long CreatedByUserId { get; set; }
         public DateTime DateCreated { get; set; }
-        public bool IsActive { get; set; }
+        public long UpdatedByUserId { get; set; }
+        public DateTime DateUpdated { get; set; }
+        public long DeletedByUserId { get; set; }
+        public DateTime DateDeleted { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

@@ -18,6 +18,8 @@ namespace emr_backend_data.ViewModel
         public string PasswordHash { get; set; }
         public long RoleId { get; set; }
         public DateTime DateCreated { get; set; }
+        public long HealthCareProviderId { get; set; }
+
     }
     public class CreateSuperAdminUserVM
     {
@@ -29,5 +31,9 @@ namespace emr_backend_data.ViewModel
         public string PasswordHash { get; set; }
         public long RoleId { get; set; }
         public DateTime DateCreated { get; set; }
+
+        [JsonIgnore]
+        public long HealthCareProviderId { get; set; }
+
     }
 }

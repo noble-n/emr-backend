@@ -22,6 +22,7 @@ namespace emr_backend_data.IRepository
         Task<string> ChangePassword(long UserId, string defaultPassword);
         Task<string> LogoutUser(string Email);
         Task<string> LogInUser(string Email);
+        Task<string> UpdateLoginActivity(long UserId, string Token, DateTime DateCreated);
 
     }
 }
